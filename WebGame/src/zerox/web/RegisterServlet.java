@@ -5,59 +5,55 @@ import zerox.service.UserService;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = "/register")
-public class RegisterServlet implements Servlet{
+public class RegisterServlet extends HttpServlet{
     @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request, response);
     }
 
     @Override
-    public ServletConfig getServletConfig() {
-        return null;
-    }
-
-    @Override
-    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
-        servletRequest.setCharacterEncoding("UTF-8");
-        servletResponse.setContentType("text/html;charset=UTF-8");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         //1 接收请求参数
-        String username = servletRequest.getParameter("username");
-        String password = servletRequest.getParameter("password");
-        User user = new User(username,password);
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String check = request.getParameter("check");
+        //2.完成功能：校验验证码，校验用户名和密码。任何一项校验不通过，就登录失败
+        //2.1 先校验验证码
+        String checkcode_server = (String) request.getSession().getAttribute("VERIFICATIONCODE_SERVER");
+        if (!check.equalsIgnoreCase(checkcode_server)) {
+            //验证码错误
+            request.setAttribute("registerError", "验证码错误");
+            request.getRequestDispatcher("/registerPage.jsp").forward(request, response);
+            return;
+        }
 
-        //2 通过service进行注册
+        //2.2 再校验用户名,通过service进行注册
+        User user = new User(username,password);
         UserService userService = new UserService();
         boolean b = false;
-        PrintWriter out = servletResponse.getWriter();
         try {
             b = userService.register(user);
             //3 提示
             if(b){
-                servletResponse.getWriter().print("用户注册成功<br/>");
-                servletResponse.getWriter().print("<a href='/demo'>继续注册</a>");
+                PrintWriter out = response.getWriter();
+                response.getWriter().print("用户注册成功<br/>");
+                response.getWriter().print("<a href='index.jsp'>返回首页</a>");
             } else {
-                servletResponse.getWriter().print("用户注册失败:您的用户名已被他人使用<br/>");
-                servletResponse.getWriter().print("<a href='/demo'>重新尝试注册</a>");
+                request.setAttribute("registerError", "您填入的用户名已被他人使用");
+                request.getRequestDispatcher("/registerPage.jsp").forward(request, response);
             }
         } catch (IllegalArgumentException e) {
-            servletResponse.getWriter().print("用户注册失败:"+e.getMessage()+"<br/>");
-            servletResponse.getWriter().print("<a href='/demo'>重新尝试注册</a>");
+            request.setAttribute("registerError", e.getMessage());
+            request.getRequestDispatcher("/registerPage.jsp").forward(request, response);
         }
-
-
-    }
-
-    @Override
-    public String getServletInfo() {
-        return null;
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

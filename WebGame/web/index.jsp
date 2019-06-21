@@ -8,9 +8,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
-    <title>$Title$</title>
+    <title>首页</title>
   </head>
   <body>
-    <a href="/demo">开始注册</a>
+    <a href="loginPage.jsp">我有账号，我要登录</a><br/>
+    <a href="registerPage.jsp">没有账号，开始注册</a>
   </body>
 </html>

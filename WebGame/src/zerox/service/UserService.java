@@ -15,4 +15,9 @@ public class UserService {
         if(userDao.contains(user)>0) return false;
         return userDao.save(user)==1;
     }
+    public User login(String username, String password) {
+        UserDao dao = new UserDao();
+        User user = dao.login(username, password);
+        return user;
+    }
 }
