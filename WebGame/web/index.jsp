@@ -12,6 +12,9 @@
   </head>
   <body>
     <a href="loginPage.jsp">我有账号，我要登录</a><br/>
-    <a href="registerPage.jsp">没有账号，开始注册</a>
+    <a href="registerPage.jsp">没有账号，开始注册</a><br/>
+    <br/>
+    <br/>
+    <a href="downloadPage.jsp">下载文件</a>
   </body>
 </html>
