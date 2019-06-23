@@ -28,7 +28,7 @@ public class RegisterServlet extends HttpServlet{
         String check = request.getParameter("check");
         //2.完成功能：校验验证码，校验用户名和密码。任何一项校验不通过，就登录失败
         //2.1 先校验验证码
-        String checkcode_server = (String) request.getSession().getAttribute("VERIFICATIONCODE_SERVER");
+        String checkcode_server = (String) request.getSession().getAttribute("TWISTEDVERICODE_SERVER");
         if (!check.equalsIgnoreCase(checkcode_server)) {
             //验证码错误
             request.setAttribute("registerError", "验证码错误");
