@@ -36,9 +36,11 @@
         <a role="button" class="btn btn-warning" href="registerPage.jsp">没有账号，开始注册</a>
         <br/>
         <a role="button" class="btn btn-primary" href="downloadPage.jsp">下载文件</a>
+        <br/>
+        <a role="button" class="btn btn-primary" href="gameQueryAll">玩过的游戏列表</a>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="js/jquery-1.11.3.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/bootstrap.min.js"></script>
     </div>
