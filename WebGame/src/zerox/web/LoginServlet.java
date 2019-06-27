@@ -36,6 +36,7 @@ public class LoginServlet extends HttpServlet {
         //3.处理结果
         if (user != null) {
             //登录成功了，重定向跳转到首页
+            request.getSession().setAttribute("loginUser",user);
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         }else{
             //登录失败了，请求转发跳转到登录页

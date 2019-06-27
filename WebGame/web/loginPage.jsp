@@ -13,12 +13,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>登录界面</title>
-    <jsp:include page="header.jsp" flush="true"/>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <script language="javascript" type="text/javascript">
+        function checkInCorrect()      //判断用户名和密码是否为空
+        {
+            if (document.getElementById('inputUsername').value == "") {
+                alert('请输入用户名！');
+                document.getElementById('inputUsername').focus();
+                return false
+            }
+            if (document.getElementById('inputPassword').value == "") {
+                alert('请输入密码！');
+                document.getElementById('inputPassword').focus();
+                return false
+            }
+            else {
+                saveInfo();
+                return true;
+            }
+        }
+
+        saveInfo = function () {
+            try {
+                var isSave = document.getElementById('remember_password').checked;   //保存按键是否选中
+                if (isSave) {
+                    var username = document.getElementById('inputUsername').value;
+                    var password = document.getElementById('inputPassword').value;
+                    if (username != "" && password != "") {
+                        SetCookie(username, password);
+                    }
+                } else {
+                    SetCookie("", "");
+                }
+            } catch (e) {
+
+            }
+        }
+
+        function SetCookie(username, password) {
+            var Then = new Date();
+            Then.setTime(Then.getTime() + 1866240000000);
+            document.cookie = "username=" + username + "%%" + password + ";expires=" + Then.toGMTString();
+        }
+
+        function GetCookie() {
+            var nmpsd;
+            var nm;
+            var psd;
+            var cookieString = new String(document.cookie);
+            var cookieHeader = "username=";
+            var beginPosition = cookieString.indexOf(cookieHeader);
+            cookieString = cookieString.substring(beginPosition);
+            var ends = cookieString.indexOf(";");
+            if (ends != -1) {
+                cookieString = cookieString.substring(0, ends);
+            }
+            if (beginPosition > -1) {
+                nmpsd = cookieString.substring(cookieHeader.length);
+                if (nmpsd != "") {
+                    beginPosition = nmpsd.indexOf("%%");
+                    nm = nmpsd.substring(0, beginPosition);
+                    psd = nmpsd.substring(beginPosition + 2);
+                    document.getElementById('inputUsername').value = nm;
+                    document.getElementById('inputPassword').value = psd;
+                    if (nm != "" && psd != "") {
+                        // document.forms[0].checkbox.checked = true;
+                        document.getElementById('remember_password').checked = true;
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
+<body onLoad="document.getElementById('inputUsername').focus();GetCookie();">
+<jsp:include page="header.jsp" flush="true"/>
 <div class="container theme-showcase" role="main">
     <br/>
     <br/>
@@ -29,7 +104,7 @@
     class="alert alert-danger"><%=request.getAttribute("loginError") == null ? "" : request.getAttribute("loginError")%>
     </div>
     <%--<form id="loginForm" action="<%=request.getContextPath()%>/login" method="post" accept-charset="utf-8">--%>
-    <form class="form-horizontal" id="loginForm" action="login" method="post" accept-charset="utf-8">
+    <form class="form-horizontal" id="loginForm" action="login" method="post" accept-charset="utf-8" onsubmit="return checkInCorrect()">
         <div class="form-group">
             <label for="inputUsername" class="col-sm-2 control-label">用户名</label>
             <div class="col-sm-8">
@@ -53,7 +128,7 @@
             <div class="col-sm-offset-2 col-sm-8">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox"> 记住我（自动登录）
+                        <input type="checkbox" id="remember_password"> 记住我（自动登录）
                     </label>
                 </div>
             </div>
@@ -61,6 +136,7 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-8">
                 <button type="submit" class="btn btn-primary">登录</button>
+                <button type="button" class="btn btn-default" onclick="location.href='registerPage.jsp'">没有账号，我要注册</button>
             </div>
         </div>
     </form>
@@ -74,9 +150,5 @@
     }
 </script>
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="js/jquery-1.11.3.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="js/bootstrap.min.js"></script>
 </body>
 </html>

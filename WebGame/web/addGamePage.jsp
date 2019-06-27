@@ -20,7 +20,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>添加游戏</title>
-    <jsp:include page="header.jsp" flush="true"/>
 
     <!-- 1. 导入CSS的全局样式 -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -30,7 +29,7 @@
     <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-
+<jsp:include page="header.jsp" flush="true"/>
 <div class="container">
     <br/>
     <br/>
@@ -70,7 +69,7 @@
         <div class="form-group" style="text-align: center">
             <input class="btn btn-primary" type="submit" value="提交" />
             <input class="btn btn-default" type="reset" value="重置" />
-            <input class="btn btn-default" type="button" onclick="location.href='gameQueryAll'" value="返回" />
+            <input class="btn btn-default" type="button" onclick="history.back()" value="返回" />
         </div>
     </form>
 </div>

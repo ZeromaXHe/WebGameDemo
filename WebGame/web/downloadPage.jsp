@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>下载页面</title>
-    <jsp:include page="header.jsp" flush="true"/>
+
     <script>
         function isIE() {
             //获取当前浏览器相关信息
@@ -34,8 +34,13 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
+<jsp:include page="header.jsp" flush="true"/>
 <br/>
 <br/>
 <br/>
@@ -44,9 +49,5 @@
 <h3>下载清单</h3>
 <a id="ww" href="download?fileName=简介.txt">简介.txt</a>
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="js/jquery-1.11.3.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -21,7 +21,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>游戏列表</title>
-    <jsp:include page="header.jsp" flush="true"/>
 
     <!-- 1. 导入CSS的全局样式 -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -36,6 +35,7 @@
     </style>
 </head>
 <body>
+<jsp:include page="header.jsp" flush="true"/>
 <div class="container">
     <br/>
     <br/>
@@ -72,18 +72,22 @@
                 <td>${game.gamereleasedate}</td>
                 <td>${game.gamegenre}</td>
                 <td>
-                    <a class="btn btn-default btn-sm" href="editGamePage?id=${game.id}">修改</a>&nbsp;
+                    <a class="btn btn-default btn-sm" href="javascript:void(0)"
+                       onclick="confirm(${game.id},'edit')">修改</a>&nbsp;
                         <%--  a标签的href值设置为：javascript:void(0)表示禁用超链接的跳转--%>
                     <a class="btn btn-danger btn-sm" href="javascript:void(0)"
-                       onclick="confirmDelete(${game.id})">删除</a>
+                       onclick="confirm(${game.id},'delete')">删除</a>
                 </td>
             </tr>
         </c:forEach>
         <tr>
-            <td colspan="8" align="center"><a class="btn btn-primary" href="addGamePage.jsp">添加游戏</a></td>
+            <td colspan="8" align="center">
+                <a class="btn btn-primary" href="javascript:void(0)" onclick="confirm(0,'add')">添加游戏</a>
+            </td>
         </tr>
-        <c:set var="after" value="${gamePage.pageNumber-2 gt 1?2:6-gamePage.pageNumber}" />
-        <c:set var="before" value="${gamePage.pageNumber+2 lt gamePage.pageCount?2:5-gamePage.pageCount+gamePage.pageNumber}" />
+        <c:set var="after" value="${gamePage.pageNumber-2 gt 1?2:6-gamePage.pageNumber}"/>
+        <c:set var="before"
+               value="${gamePage.pageNumber+2 lt gamePage.pageCount?2:5-gamePage.pageCount+gamePage.pageNumber}"/>
         <tr>
             <td colspan="8" align="center">
                 <nav aria-label="Page navigation">
@@ -110,8 +114,11 @@
                         </c:if>
 
                         <%--
-                        页码按钮：应该是实际计算分了多少页，就显示多少个页码按钮
-                        从1循环到 pageBean.pageCount
+                        页码按钮：
+                        当总页数小于7时，
+                        是实际计算分了多少页，就显示多少个页码按钮。从1循环到 gamePage.pageCount
+                        否则的话，判断前后是否和开头1和结尾pageCount相连，根据需要输出“...”
+                        并且保证总共显示的页面跳转按钮为7个。
                         --%>
                         <c:choose>
 
@@ -119,15 +126,11 @@
                                 <c:forEach var="i" begin="1" end="${gamePage.pageCount}" step="1">
                                     <%--
                                     要把当前页码按钮标示出来：
-                                    if i==pageBean.pageNumber：i就是当前页码；否则就i就不是当前页码
+                                    if i==gamePage.pageNumber：i就是当前页码；否则就i就不是当前页码
                                     --%>
-                                    <c:if test="${i==gamePage.pageNumber}">
-                                        <li class="active"><a
-                                                href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
-                                    </c:if>
-                                    <c:if test="${i!=gamePage.pageNumber}">
-                                        <li><a href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
-                                    </c:if>
+                                    <li ${i==gamePage.pageNumber?'class="active"':''}><a
+                                            href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
+
                                 </c:forEach>
                             </c:when>
                             <c:otherwise>
@@ -141,16 +144,12 @@
                                            end="${gamePage.pageNumber+2 lt gamePage.pageCount?gamePage.pageNumber+after:gamePage.pageCount-1}"
                                            step="1">
                                     <%--
-                                    要把当前页码按钮标示出来：
-                                    if i==pageBean.pageNumber：i就是当前页码；否则就i就不是当前页码
+                                    要把当前页码前后的按钮标示出来：
+                                    if i==gamePage.pageNumber：i就是当前页码；否则就i就不是当前页码
                                     --%>
-                                    <c:if test="${i==gamePage.pageNumber}">
-                                        <li class="active"><a
-                                                href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
-                                    </c:if>
-                                    <c:if test="${i!=gamePage.pageNumber}">
-                                        <li><a href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
-                                    </c:if>
+                                    <li ${i==gamePage.pageNumber?'class="active"':''}><a
+                                            href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
+
                                 </c:forEach>
                                 <c:if test="${gamePage.pageNumber+2 lt gamePage.pageCount-1}">
                                     <li class="disabled"><a href="">...</a></li>
@@ -187,12 +186,54 @@
     </table>
 </div>
 <script>
-    function confirmDelete(id) {
-        var isYes = confirm("确定要删除吗？");
-        if (isYes) {
-            //发请求到Servlet，并且传参用户的id
-            location.href = "deleteGame?id=" + id;
+    function confirm(id, action) {
+        //获取用户登录数据异步请求
+        var url = "user";//UserServlet
+        var data = {action: "getLoginUserData"};
+        var callback;
+        if (action === "delete") {
+            callback = function (resultInfo) {
+                //判断返回数据有效性
+                if (resultInfo.ok && "admin" === resultInfo.data.username) {
+                    var isYes = confirm("确定要删除吗？");
+                    if (isYes) {
+                        //发请求到Servlet，并且传参用户的id
+                        location.href = "deleteGame?id=" + id;
+                    }
+                }
+                else {
+                    alert("你不是管理员，没有进行删除操作的权限");
+                }
+            }
+        }else if(action==="edit"){
+            callback = function (resultInfo) {
+                //判断返回数据有效性
+                if (resultInfo.ok && "admin" === resultInfo.data.username) {
+
+                        //发请求到Servlet，并且传参用户的id
+                        location.href="editGamePage?id=" + id;
+
+                }
+                else {
+                    alert("你不是管理员，没有进行修改操作的权限");
+                }
+            }
+        } else if(action==="add"){
+            callback = function (resultInfo) {
+                //判断返回数据有效性
+                if (resultInfo.ok) {
+
+                    //发请求到Servlet，并且传参用户的id
+                    location.href="addGamePage.jsp";
+
+                }
+                else {
+                    alert("你还没有登录，不能添加游戏");
+                }
+            }
         }
+        var type = "json";
+        $.post(url, data, callback, type);
     }
 </script>
 </body>
