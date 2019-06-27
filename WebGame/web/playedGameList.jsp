@@ -41,6 +41,16 @@
     <br/>
     <br/>
     <h3 style="text-align: center">游戏列表</h3>
+    <form class="form-inline" action="gameQueryAll" method="get">
+        <div class="form-group">
+            <label for="pageSizeBox">每页显示行数</label>
+            <input type="text" class="form-control" id="pageSizeBox" name="pageSize" value="${pageSize}"
+                   placeholder="3">
+        </div>
+        <div class="form-group" style="text-align: center">
+            <input class="btn btn-primary" type="submit" value="提交"/>
+        </div>
+    </form>
     <table border="1" class="table table-bordered table-hover">
         <tr class="success">
             <th>序号</th>
@@ -52,9 +62,9 @@
             <th>游戏类型</th>
             <th>操作</th>
         </tr>
-        <c:forEach items="${gameList}" var="game" varStatus="vs">
+        <c:forEach items="${gamePage.data}" var="game">
             <tr>
-                <td>${vs.count}</td>
+                <td>${game.id}</td>
                 <td>${game.gameCHname}</td>
                 <td>${game.gameENname}</td>
                 <td>${game.gamedeveloper}</td>
@@ -64,12 +74,115 @@
                 <td>
                     <a class="btn btn-default btn-sm" href="editGamePage?id=${game.id}">修改</a>&nbsp;
                         <%--  a标签的href值设置为：javascript:void(0)表示禁用超链接的跳转--%>
-                    <a class="btn btn-danger btn-sm" href="javascript:void(0)" onclick="confirmDelete(${game.id})">删除</a>
+                    <a class="btn btn-danger btn-sm" href="javascript:void(0)"
+                       onclick="confirmDelete(${game.id})">删除</a>
                 </td>
             </tr>
         </c:forEach>
         <tr>
             <td colspan="8" align="center"><a class="btn btn-primary" href="addGamePage.jsp">添加游戏</a></td>
+        </tr>
+        <c:set var="after" value="${gamePage.pageNumber-2 gt 1?2:6-gamePage.pageNumber}" />
+        <c:set var="before" value="${gamePage.pageNumber+2 lt gamePage.pageCount?2:5-gamePage.pageCount+gamePage.pageNumber}" />
+        <tr>
+            <td colspan="8" align="center">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <%--
+                        上一页按钮
+                        如果当前页码>1：允许点击“上一页”按钮
+                        否则：不允许点击“上一页”
+                        --%>
+                        <c:if test="${gamePage.pageNumber > 1}">
+                            <li>
+                                <a href="gameQueryAll?pageNumber=${gamePage.pageNumber-1}&pageSize=${pageSize}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        </c:if>
+                        <c:if test="${gamePage.pageNumber <= 1}">
+                            <li class="disabled">
+                                <a aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <%--
+                        页码按钮：应该是实际计算分了多少页，就显示多少个页码按钮
+                        从1循环到 pageBean.pageCount
+                        --%>
+                        <c:choose>
+
+                            <c:when test="${gamePage.pageCount<=7}">
+                                <c:forEach var="i" begin="1" end="${gamePage.pageCount}" step="1">
+                                    <%--
+                                    要把当前页码按钮标示出来：
+                                    if i==pageBean.pageNumber：i就是当前页码；否则就i就不是当前页码
+                                    --%>
+                                    <c:if test="${i==gamePage.pageNumber}">
+                                        <li class="active"><a
+                                                href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
+                                    </c:if>
+                                    <c:if test="${i!=gamePage.pageNumber}">
+                                        <li><a href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
+                                    </c:if>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <li ${1==gamePage.pageNumber?'class="active"':''}><a
+                                        href="gameQueryAll?pageNumber=1&pageSize=${pageSize}">1</a></li>
+                                <c:if test="${gamePage.pageNumber-2 gt 2}">
+                                    <li class="disabled"><a href="">...</a></li>
+                                </c:if>
+                                <c:forEach var="i"
+                                           begin="${gamePage.pageNumber-2 gt 1?gamePage.pageNumber-before:2}"
+                                           end="${gamePage.pageNumber+2 lt gamePage.pageCount?gamePage.pageNumber+after:gamePage.pageCount-1}"
+                                           step="1">
+                                    <%--
+                                    要把当前页码按钮标示出来：
+                                    if i==pageBean.pageNumber：i就是当前页码；否则就i就不是当前页码
+                                    --%>
+                                    <c:if test="${i==gamePage.pageNumber}">
+                                        <li class="active"><a
+                                                href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
+                                    </c:if>
+                                    <c:if test="${i!=gamePage.pageNumber}">
+                                        <li><a href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
+                                    </c:if>
+                                </c:forEach>
+                                <c:if test="${gamePage.pageNumber+2 lt gamePage.pageCount-1}">
+                                    <li class="disabled"><a href="">...</a></li>
+                                </c:if>
+                                <li ${gamePage.pageCount==gamePage.pageNumber?'class="active"':''}><a
+                                        href="gameQueryAll?pageNumber=${gamePage.pageCount}&pageSize=${pageSize}">${gamePage.pageCount}</a>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+                        <%--
+                        下一页按钮
+                        如果  当前页码 < 总页数：允许点击“下一页”按钮
+                        否则：不允许点击“下一页”按钮
+                        --%>
+                        <c:if test="${gamePage.pageNumber < gamePage.pageCount}">
+                            <li>
+                                <a href="gameQueryAll?pageNumber=${gamePage.pageNumber+1}&pageSize=${pageSize}"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </c:if>
+                        <c:if test="${gamePage.pageNumber >= gamePage.pageCount}">
+                            <li class="disabled">
+                                <a aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
+            </td>
         </tr>
     </table>
 </div>

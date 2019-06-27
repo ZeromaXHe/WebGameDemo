@@ -38,4 +38,12 @@ public class PlayedGameDao {
         Object[] params = {game.getGameCHname(), game.getGameENname(), game.getGamedeveloper(), game.getGamepublisher(), game.getGamereleasedate(), game.getGamegenre(), game.getId()};
         return jdbcTemplate.update("update games set gameCHname = ?, gameENname = ?, gamedeveloper = ?, gamepublisher = ?, gamereleasedate = ?, gamegenre = ? WHERE id = ?", params);
     }
+
+    public List<Game> findByPage(int index, int pageSize) {
+        return jdbcTemplate.query("select * from games limit ?,?", new BeanPropertyRowMapper<>(Game.class), index, pageSize);
+    }
+
+    public int getTotalCount() {
+        return jdbcTemplate.queryForObject("select count(*) from games", Integer.class);
+    }
 }

@@ -1,8 +1,6 @@
 package zerox.utils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 public class BeanUtils {
