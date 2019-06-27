@@ -61,14 +61,26 @@
                 <td>${game.gamepublisher}</td>
                 <td>${game.gamereleasedate}</td>
                 <td>${game.gamegenre}</td>
-                <td><a class="btn btn-default btn-sm" href="update.jsp">修改</a>&nbsp;<a class="btn btn-danger btn-sm"
-                                                                                       href="">删除</a></td>
+                <td>
+                    <a class="btn btn-default btn-sm" href="editGamePage?id=${game.id}">修改</a>&nbsp;
+                        <%--  a标签的href值设置为：javascript:void(0)表示禁用超链接的跳转--%>
+                    <a class="btn btn-danger btn-sm" href="javascript:void(0)" onclick="confirmDelete(${game.id})">删除</a>
+                </td>
             </tr>
         </c:forEach>
         <tr>
-            <td colspan="8" align="center"><a class="btn btn-primary" href="add.jsp">添加游戏</a></td>
+            <td colspan="8" align="center"><a class="btn btn-primary" href="addGamePage.jsp">添加游戏</a></td>
         </tr>
     </table>
 </div>
+<script>
+    function confirmDelete(id) {
+        var isYes = confirm("确定要删除吗？");
+        if (isYes) {
+            //发请求到Servlet，并且传参用户的id
+            location.href = "deleteGame?id=" + id;
+        }
+    }
+</script>
 </body>
 </html>

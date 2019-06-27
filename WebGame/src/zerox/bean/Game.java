@@ -1,18 +1,20 @@
 package zerox.bean;
 
+import java.sql.Date;
+
 public class Game {
     private Integer id;
     private String gameCHname;
     private String gameENname;
     private String gamedeveloper;
     private String gamepublisher;
-    private String gamereleasedate;
+    private Date gamereleasedate;
     private String gamegenre;
 
     public Game() {
     }
 
-    public Game(Integer id, String gameCHname, String gameENname, String gamedeveloper, String gamepublisher, String gamereleasedate, String gamegenre) {
+    public Game(Integer id, String gameCHname, String gameENname, String gamedeveloper, String gamepublisher, Date gamereleasedate, String gamegenre) {
         this.id = id;
         this.gameCHname = gameCHname;
         this.gameENname = gameENname;
@@ -62,11 +64,11 @@ public class Game {
         this.gamepublisher = gamepublisher;
     }
 
-    public String getGamereleasedate() {
+    public Date getGamereleasedate() {
         return gamereleasedate;
     }
 
-    public void setGamereleasedate(String gamereleasedate) {
+    public void setGamereleasedate(Date gamereleasedate) {
         this.gamereleasedate = gamereleasedate;
     }
 

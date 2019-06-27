@@ -21,6 +21,9 @@
 <body>
 
 <div class="container theme-showcase" role="main">
+    <br/>
+    <br/>
+    <br/>
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
         <h1>WebGameDemo</h1>
@@ -29,9 +32,6 @@
     </div>
 
     <div class="container theme-showcase" role="main">
-        <br/>
-        <br/>
-        <br/>
         <a role="button" class="btn btn-success" href="loginPage.jsp">我有账号，我要登录</a>
         <a role="button" class="btn btn-warning" href="registerPage.jsp">没有账号，开始注册</a>
         <br/>
