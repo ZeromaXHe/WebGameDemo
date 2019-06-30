@@ -22,6 +22,11 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>游戏列表</title>
 
+    <style>
+        .error{
+            color:red;
+        }
+    </style>
     <!-- 1. 导入CSS的全局样式 -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- 2. jQuery导入，建议使用1.9以上的版本 -->
@@ -41,7 +46,7 @@
     <br/>
     <br/>
     <h3 style="text-align: center">游戏列表</h3>
-    <form class="form-inline" action="gameQueryAll" method="get">
+    <form class="form-inline" id="pageSizeForm" action="gameQueryAll" method="get">
         <div class="form-group">
             <label for="pageSizeBox">每页显示行数</label>
             <input type="text" class="form-control" id="pageSizeBox" name="pageSize" value="${pageSize}"
@@ -51,6 +56,7 @@
             <input class="btn btn-primary" type="submit" value="提交"/>
         </div>
     </form>
+
     <table border="1" class="table table-bordered table-hover">
         <tr class="success">
             <th>序号</th>
@@ -185,6 +191,17 @@
         </tr>
     </table>
 </div>
+<script src="js/jquery.validate.min.js"></script>
+<script>
+    $("#pageSizeForm").validate({
+        rules:{
+            pageSize:{digits:true,min:1}
+        },messages:{
+            pageSize:{digits:"请输入大于等于1的整数",min:"请输入大于等于1的整数"}
+        }
+    });
+</script>
+
 <script>
     function confirm(id, action) {
         //获取用户登录数据异步请求

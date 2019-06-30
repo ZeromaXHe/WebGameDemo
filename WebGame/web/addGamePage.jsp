@@ -21,6 +21,12 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>添加游戏</title>
 
+    <style>
+        .error{
+            color:red;
+        }
+    </style>
+
     <!-- 1. 导入CSS的全局样式 -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- 2. jQuery导入，建议使用1.9以上的版本 -->
@@ -35,7 +41,7 @@
     <br/>
     <br/>
     <center><h3>添加游戏页面</h3></center>
-    <form action="addGame" method="post">
+    <form name="addForm" id="addForm" action="addGame" method="post">
         <div class="form-group">
             <label for="CHname">中文名：</label>
             <input type="text" class="form-control" id="CHname" name="gameCHname" placeholder="请输入游戏中文名">
@@ -72,6 +78,26 @@
             <input class="btn btn-default" type="button" onclick="history.back()" value="返回" />
         </div>
     </form>
+    <script src="js/jquery.validate.min.js"></script>
+    <script>
+        $("#addForm").validate({
+            rules:{
+                gameCHname:{required:true,rangelength:[1,20]},
+                gameENname:{required:true,rangelength:[1,40]},
+                gamedeveloper:{maxlength:40},
+                gamepublisher:{maxlength:40},
+                gamereleasedate:{date:true},
+                gamegenre:{maxlength:20}
+            },messages:{
+                gameCHname:{required:"游戏中文名不能为空",rangelength:"游戏中文名长度应该属于1~20"},
+                gameENname:{required:"游戏英文名不能为空",rangelength:"游戏英文名长度应该属于1~40"},
+                gamedeveloper:{maxlength:"游戏开发商名字长度应该小于40"},
+                gamepublisher:{maxlength:"游戏发行商名字长度应该小于40"},
+                gamereleasedate:{date:"请按日期格式输入，如2000-1-1"},
+                gamegenre:{maxlength:"游戏类型字符串长度不得超过20"}
+            }
+        });
+    </script>
 </div>
 
 </body>

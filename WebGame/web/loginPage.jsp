@@ -14,6 +14,12 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>登录界面</title>
 
+    <style>
+        .error{
+            color:red;
+        }
+    </style>
+
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -141,6 +147,20 @@
         </div>
     </form>
 </div>
+<script src="js/jquery.validate.min.js"></script>
+<script>
+    $("#loginForm").validate({
+        rules:{
+            username:{required:true,maxlength:20},
+            password:{required:true,maxlength:20},
+            check:{required:true,rangelength:[4,4]}
+        },messages:{
+            username:{required:"用户名不为空",maxlength:"用户名长度小于等于20"},
+            password:{required:"密码不为空",maxlength:"密码长度小于等于20"},
+            check:{required:"请输入验证码",rangelength:"验证码为4位字符"}
+        }
+    });
+</script>
 <script>
     function changeImage(obj) {
         //浏览器的缓存。src属性值变更前 == 变更后的值，浏览器认为我们请求的是同一图片，所以直接从缓存里取出显示了
