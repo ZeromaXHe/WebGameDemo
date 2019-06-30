@@ -226,10 +226,8 @@
             callback = function (resultInfo) {
                 //判断返回数据有效性
                 if (resultInfo.ok && "admin" === resultInfo.data.username) {
-
                         //发请求到Servlet，并且传参用户的id
                         location.href="editGamePage?id=" + id;
-
                 }
                 else {
                     alert("你不是管理员，没有进行修改操作的权限");
@@ -239,10 +237,8 @@
             callback = function (resultInfo) {
                 //判断返回数据有效性
                 if (resultInfo.ok) {
-
                     //发请求到Servlet，并且传参用户的id
                     location.href="addGamePage.jsp";
-
                 }
                 else {
                     alert("你还没有登录，不能添加游戏");
