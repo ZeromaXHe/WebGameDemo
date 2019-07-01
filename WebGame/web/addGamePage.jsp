@@ -41,7 +41,8 @@
     <br/>
     <br/>
     <center><h3>添加游戏页面</h3></center>
-    <form name="addForm" id="addForm" action="addGame" method="post">
+    <form name="addForm" id="addForm" action="game" method="post">
+        <input type="hidden" name="action" value="add">
         <div class="form-group">
             <label for="CHname">中文名：</label>
             <input type="text" class="form-control" id="CHname" name="gameCHname" placeholder="请输入游戏中文名">

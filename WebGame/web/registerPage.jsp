@@ -39,7 +39,8 @@
          class="alert alert-danger"><%=request.getAttribute("registerError") == null ? "" : request.getAttribute("registerError")%>
     </div>
     <%--<form id="registerForm" action="<%=request.getContextPath()%>/login" method="post" accept-charset="utf-8">--%>
-    <form class="form-horizontal" id="registerForm" action="register" method="post" accept-charset="utf-8">
+    <form class="form-horizontal" id="registerForm" action="user" method="post" accept-charset="utf-8">
+        <input type="hidden" name="action" value="register">
         <div class="form-group">
             <label for="inputUsername" class="col-sm-2 control-label">用户名</label>
             <div class="col-sm-8">

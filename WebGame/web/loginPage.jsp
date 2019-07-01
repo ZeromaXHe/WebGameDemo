@@ -30,12 +30,12 @@
     <script language="javascript" type="text/javascript">
         function checkInCorrect()      //判断用户名和密码是否为空
         {
-            if (document.getElementById('inputUsername').value == "") {
+            if (document.getElementById('inputUsername').value === "") {
                 alert('请输入用户名！');
                 document.getElementById('inputUsername').focus();
                 return false
             }
-            if (document.getElementById('inputPassword').value == "") {
+            if (document.getElementById('inputPassword').value === "") {
                 alert('请输入密码！');
                 document.getElementById('inputPassword').focus();
                 return false
@@ -52,7 +52,7 @@
                 if (isSave) {
                     var username = document.getElementById('inputUsername').value;
                     var password = document.getElementById('inputPassword').value;
-                    if (username != "" && password != "") {
+                    if (username !== "" && password !== "") {
                         SetCookie(username, password);
                     }
                 } else {
@@ -78,18 +78,18 @@
             var beginPosition = cookieString.indexOf(cookieHeader);
             cookieString = cookieString.substring(beginPosition);
             var ends = cookieString.indexOf(";");
-            if (ends != -1) {
+            if (ends !== -1) {
                 cookieString = cookieString.substring(0, ends);
             }
             if (beginPosition > -1) {
                 nmpsd = cookieString.substring(cookieHeader.length);
-                if (nmpsd != "") {
+                if (nmpsd !== "") {
                     beginPosition = nmpsd.indexOf("%%");
                     nm = nmpsd.substring(0, beginPosition);
                     psd = nmpsd.substring(beginPosition + 2);
                     document.getElementById('inputUsername').value = nm;
                     document.getElementById('inputPassword').value = psd;
-                    if (nm != "" && psd != "") {
+                    if (nm !== "" && psd !== "") {
                         // document.forms[0].checkbox.checked = true;
                         document.getElementById('remember_password').checked = true;
                     }
@@ -110,7 +110,8 @@
     class="alert alert-danger"><%=request.getAttribute("loginError") == null ? "" : request.getAttribute("loginError")%>
     </div>
     <%--<form id="loginForm" action="<%=request.getContextPath()%>/login" method="post" accept-charset="utf-8">--%>
-    <form class="form-horizontal" id="loginForm" action="login" method="post" accept-charset="utf-8" onsubmit="return checkInCorrect()">
+    <form class="form-horizontal" id="loginForm" action="user" method="post" accept-charset="utf-8" onsubmit="return checkInCorrect()">
+        <input type="hidden" name="action" value="login">
         <div class="form-group">
             <label for="inputUsername" class="col-sm-2 control-label">用户名</label>
             <div class="col-sm-8">

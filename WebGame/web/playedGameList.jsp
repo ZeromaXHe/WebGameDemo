@@ -46,7 +46,8 @@
     <br/>
     <br/>
     <h3 style="text-align: center">游戏列表</h3>
-    <form class="form-inline" id="pageSizeForm" action="gameQueryAll" method="get">
+    <form class="form-inline" id="pageSizeForm" action="game" method="post">
+        <input type="hidden" name="action" value="queryAll">
         <div class="form-group">
             <label for="pageSizeBox">每页显示行数</label>
             <input type="text" class="form-control" id="pageSizeBox" name="pageSize" value="${pageSize}"
@@ -79,16 +80,16 @@
                 <td>${game.gamegenre}</td>
                 <td>
                     <a class="btn btn-default btn-sm" href="javascript:void(0)"
-                       onclick="confirm(${game.id},'edit')">修改</a>&nbsp;
+                       onclick="confirmAction(${game.id},'edit')">修改</a>&nbsp;
                         <%--  a标签的href值设置为：javascript:void(0)表示禁用超链接的跳转--%>
                     <a class="btn btn-danger btn-sm" href="javascript:void(0)"
-                       onclick="confirm(${game.id},'delete')">删除</a>
+                       onclick="confirmAction(${game.id},'delete')">删除</a>
                 </td>
             </tr>
         </c:forEach>
         <tr>
             <td colspan="8" align="center">
-                <a class="btn btn-primary" href="javascript:void(0)" onclick="confirm(0,'add')">添加游戏</a>
+                <a class="btn btn-primary" href="javascript:void(0)" onclick="confirmAction(0,'add')">添加游戏</a>
             </td>
         </tr>
         <c:set var="after" value="${gamePage.pageNumber-2 gt 1?2:6-gamePage.pageNumber}"/>
@@ -105,7 +106,7 @@
                         --%>
                         <c:if test="${gamePage.pageNumber > 1}">
                             <li>
-                                <a href="gameQueryAll?pageNumber=${gamePage.pageNumber-1}&pageSize=${pageSize}"
+                                <a href="game?action=queryAll&pageNumber=${gamePage.pageNumber-1}&pageSize=${pageSize}"
                                    aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
@@ -135,13 +136,13 @@
                                     if i==gamePage.pageNumber：i就是当前页码；否则就i就不是当前页码
                                     --%>
                                     <li ${i==gamePage.pageNumber?'class="active"':''}><a
-                                            href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
+                                            href="game?action=queryAll&pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
 
                                 </c:forEach>
                             </c:when>
                             <c:otherwise>
                                 <li ${1==gamePage.pageNumber?'class="active"':''}><a
-                                        href="gameQueryAll?pageNumber=1&pageSize=${pageSize}">1</a></li>
+                                        href="game?action=queryAll&pageNumber=1&pageSize=${pageSize}">1</a></li>
                                 <c:if test="${gamePage.pageNumber-2 gt 2}">
                                     <li class="disabled"><a href="">...</a></li>
                                 </c:if>
@@ -154,14 +155,14 @@
                                     if i==gamePage.pageNumber：i就是当前页码；否则就i就不是当前页码
                                     --%>
                                     <li ${i==gamePage.pageNumber?'class="active"':''}><a
-                                            href="gameQueryAll?pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
+                                            href="game?action=queryAll&pageNumber=${i}&pageSize=${pageSize}">${i}</a></li>
 
                                 </c:forEach>
                                 <c:if test="${gamePage.pageNumber+2 lt gamePage.pageCount-1}">
                                     <li class="disabled"><a href="">...</a></li>
                                 </c:if>
                                 <li ${gamePage.pageCount==gamePage.pageNumber?'class="active"':''}><a
-                                        href="gameQueryAll?pageNumber=${gamePage.pageCount}&pageSize=${pageSize}">${gamePage.pageCount}</a>
+                                        href="game?action=queryAll&pageNumber=${gamePage.pageCount}&pageSize=${pageSize}">${gamePage.pageCount}</a>
                                 </li>
                             </c:otherwise>
                         </c:choose>
@@ -172,7 +173,7 @@
                         --%>
                         <c:if test="${gamePage.pageNumber < gamePage.pageCount}">
                             <li>
-                                <a href="gameQueryAll?pageNumber=${gamePage.pageNumber+1}&pageSize=${pageSize}"
+                                <a href="game?action=queryAll&pageNumber=${gamePage.pageNumber+1}&pageSize=${pageSize}"
                                    aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
@@ -203,7 +204,7 @@
 </script>
 
 <script>
-    function confirm(id, action) {
+    function confirmAction(id, action) {
         //获取用户登录数据异步请求
         var url = "user";//UserServlet
         var data = {action: "getLoginUserData"};
@@ -214,8 +215,8 @@
                 if (resultInfo.ok && "admin" === resultInfo.data.username) {
                     var isYes = confirm("确定要删除吗？");
                     if (isYes) {
-                        //发请求到Servlet，并且传参用户的id
-                        location.href = "deleteGame?id=" + id;
+                        //发请求到Servlet，并且传参游戏的id
+                        location.href = "game?action=delete&id=" + id;
                     }
                 }
                 else {
@@ -226,8 +227,8 @@
             callback = function (resultInfo) {
                 //判断返回数据有效性
                 if (resultInfo.ok && "admin" === resultInfo.data.username) {
-                        //发请求到Servlet，并且传参用户的id
-                        location.href="editGamePage?id=" + id;
+                        //发请求到Servlet，并且传参游戏的id
+                        location.href="game?action=editPage&id=" + id;
                 }
                 else {
                     alert("你不是管理员，没有进行修改操作的权限");
@@ -237,7 +238,7 @@
             callback = function (resultInfo) {
                 //判断返回数据有效性
                 if (resultInfo.ok) {
-                    //发请求到Servlet，并且传参用户的id
+                    //发请求到Servlet，并且传参游戏的id
                     location.href="addGamePage.jsp";
                 }
                 else {

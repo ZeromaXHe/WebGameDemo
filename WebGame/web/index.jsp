@@ -41,7 +41,7 @@
         <br/>
         <a role="button" class="btn btn-primary" href="downloadPage.jsp">下载文件</a>
         <br/>
-        <a role="button" class="btn btn-primary" href="gameQueryAll">玩过的游戏列表</a>
+        <a role="button" class="btn btn-primary" href="game?action=queryAll">玩过的游戏列表</a>
         <br/>
         <a role="button" class="btn btn-primary" href="openBox.jsp">开个箱子（抽奖）</a>
 

@@ -39,8 +39,9 @@
     <br/>
     <br/>
     <h3 style="text-align: center;">修改游戏信息</h3>
-    <form id="updateForm" action="editGame" method="post">
+    <form id="updateForm" action="game" method="post">
         <input type="hidden" name="id" value="${game.id}">
+        <input type="hidden" name="action" value="edit">
         <div class="form-group">
             <label for="CHname">中文名</label>
             <input type="text" class="form-control" id="CHname" name="gameCHname" value="${game.gameCHname}" readonly="readonly" placeholder="请输入游戏中文名" />

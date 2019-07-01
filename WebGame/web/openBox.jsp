@@ -88,14 +88,14 @@
     点击开始：在小像框里img1ID不停的切换图片。20毫秒切换一次，从数组imgs里得到随机的一张图片
     分析：
         20毫秒切换一次：setInterval
-        从imgs里随机获取一个图片的路径：Math.random() 范围是：[0, 1)，转换成：[0, 6]随机整数
+        从imgs里随机获取一个图片的路径：Math.random() 范围是：[0, 1)，转换成：[0, imgs.length-1]随机整数
 
         定时器开启之后，把开始按钮设置为禁用
      */
         var timer;
         function imgStart() {
             timer = setInterval(function () {
-                // Math.random() 范围是：[0, 1)， *7 得到：[0, 7)， 向下取整
+                // Math.random() 范围是：[0, 1)， *imgs.length 得到：[0, imgs.length)， 向下取整
                 var index = Math.floor(Math.random() * imgs.length);
                 var src = imgs[index];
                 if(index==0) $("#div1").css("background-image","linear-gradient(to top,yellow, grey 30%)");
