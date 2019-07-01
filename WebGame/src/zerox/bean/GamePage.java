@@ -12,13 +12,16 @@ public class GamePage<T> {
     /*总共分了多少页*/
     private Integer pageCount;
 
+    private String rangestrs;
+
     public GamePage() {
     }
 
-    public GamePage(List<T> data, Integer pageNumber, Integer pageCount) {
+    public GamePage(List<T> data, Integer pageNumber, Integer pageCount, String rangestrs) {
         this.data = data;
         this.pageNumber = pageNumber;
         this.pageCount = pageCount;
+        this.rangestrs = rangestrs;
     }
 
     public List<T> getData() {
@@ -43,5 +46,13 @@ public class GamePage<T> {
 
     public void setPageCount(Integer pageCount) {
         this.pageCount = pageCount;
+    }
+
+    public String getRangestrs() {
+        return rangestrs;
+    }
+
+    public void setRangestrs(String rangestrs) {
+        this.rangestrs = rangestrs;
     }
 }

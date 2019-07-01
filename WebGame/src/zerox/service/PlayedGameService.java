@@ -49,4 +49,31 @@ public class PlayedGameService {
 
         return gamePageBean;
     }
+
+    public GamePage<Game> findByPageAndWord(int pageNumber, int pageSize, String trim, String[] rangeStrs) {
+        GamePage<Game> gamePageBean = new GamePage<>();
+        //1. 当前页码对应的数据集合List<Game>
+        int index = (pageNumber - 1) * pageSize;
+        List<Game> gameList = dao.findByPageAndWord(index, pageSize, trim, rangeStrs);
+        gamePageBean.setData(gameList);
+
+        //2. 当前页码
+        gamePageBean.setPageNumber(pageNumber);
+
+        //3. 总共分了多少页
+        int totalCount = dao.getTotalCountWithWord(trim, rangeStrs);
+        int pageCount = (int) Math.ceil(totalCount * 1.0 / pageSize);
+        gamePageBean.setPageCount(pageCount);
+
+        StringBuilder sb = new StringBuilder();
+        for(String range: rangeStrs){
+            if(range!=null&&!"".equals(range)){
+                sb.append("&range=");
+                sb.append(range);
+            }
+        }
+        gamePageBean.setRangestrs(sb.toString());
+
+        return gamePageBean;
+    }
 }

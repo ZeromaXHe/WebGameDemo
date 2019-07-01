@@ -46,4 +46,26 @@ public class PlayedGameDao {
     public int getTotalCount() {
         return jdbcTemplate.queryForObject("select count(*) from games", Integer.class);
     }
+
+    public List<Game> findByPageAndWord(int index, int pageSize, String trim, String[] rangeStrs) {
+        String insert = formSearchWordSql(trim,rangeStrs);
+        return jdbcTemplate.query("select * from games WHERE "+insert+" limit ?,?", new BeanPropertyRowMapper<>(Game.class), index, pageSize);
+    }
+
+    public int getTotalCountWithWord(String trim, String[] rangeStrs) {
+        String insert = formSearchWordSql(trim,rangeStrs);
+        return jdbcTemplate.queryForObject("select count(*) from games WHERE "+insert, Integer.class);
+    }
+
+    private String formSearchWordSql(String trim, String[] rangeStrs){
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<rangeStrs.length;i++){
+            if(i>0) sb.append(" or ");
+            sb.append(rangeStrs[i]);
+            sb.append(" like \"%");
+            sb.append(trim);
+            sb.append("%\"");
+        }
+        return sb.toString();
+    }
 }
