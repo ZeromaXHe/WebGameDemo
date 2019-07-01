@@ -36,15 +36,26 @@
     </div>
 
     <div class="container theme-showcase" role="main">
-        <a role="button" class="btn btn-success" href="loginPage.jsp">我有账号，我要登录</a>
-        <a role="button" class="btn btn-warning" href="registerPage.jsp">没有账号，开始注册</a>
+        <div>
+            <a role="button" class="btn btn-success" href="loginPage.jsp">我有账号，我要登录</a>
+            <a role="button" class="btn btn-warning" href="registerPage.jsp">没有账号，开始注册</a>
+        </div>
         <br/>
-        <a role="button" class="btn btn-primary" href="downloadPage.jsp">下载文件</a>
+        <div>
+            <a role="button" class="btn btn-primary" href="downloadPage.jsp">下载文件</a>
+        </div>
         <br/>
-        <a role="button" class="btn btn-primary" href="game?action=queryAll">玩过的游戏列表</a>
+        <div>
+            <a role="button" class="btn btn-primary" href="game?action=queryAll">玩过的游戏列表</a>
+        </div>
         <br/>
-        <a role="button" class="btn btn-primary" href="openBox.jsp">开个箱子（抽奖）</a>
-
+        <div>
+            <a role="button" class="btn btn-primary" href="openBox.jsp">开个箱子（抽奖）</a>
+        </div>
+        <br/>
+        <div>
+            <a role="button" class="btn btn-primary" href="minecleanning.jsp">扫雷</a>
+        </div>
     </div>
 </div>
 </body>
