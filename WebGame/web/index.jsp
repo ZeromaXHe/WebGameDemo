@@ -54,9 +54,32 @@
         </div>
         <br/>
         <div>
-            <a role="button" class="btn btn-primary" href="minecleanning.jsp">扫雷</a>
+            <a role="button" class="btn btn-primary" href="#" onclick="confirmLogin()">扫雷</a>
         </div>
     </div>
 </div>
+<script>
+    function confirmLogin() {
+        //获取用户登录数据异步请求
+        var url = "user";//UserServlet
+        var data = {action: "getLoginUserData"};
+        var callback = function (resultInfo) {
+            //判断返回数据有效性
+            if (resultInfo.ok ) {
+                    //发请求到扫雷界面
+                    location.href = "/minecleanning.jsp";
+            }
+            else {
+                var wantLogin = confirm("你还没有登录，是否登录？（此游戏仅限登录账号后进行游玩）");
+                if (wantLogin) {
+                    //发请求到Servlet，并且传参游戏的id
+                    location.href = "/loginPage.jsp";
+                }
+            }
+        }
+        var type = "json";
+        $.post(url, data, callback, type);
+    }
+</script>
 </body>
 </html>

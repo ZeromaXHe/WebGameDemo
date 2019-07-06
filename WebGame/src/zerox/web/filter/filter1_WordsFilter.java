@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebFilter("/*")
-public class WordsFilter implements Filter {
+public class filter1_WordsFilter implements Filter {
     private List<String> words = new ArrayList<>();
 
     public void destroy() {

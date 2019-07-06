@@ -265,8 +265,15 @@
                         location.href = "game?action=delete&id=" + id;
                     }
                 }
-                else {
+                else if(resultInfo.ok){
                     alert("你不是管理员，没有进行删除操作的权限");
+                }
+                else{
+                    var wantLogin = confirm("你还没有登录，是否登录？（此操作仅限管理员账号进行）");
+                    if(wantLogin){
+                        //发请求到Servlet，并且传参游戏的id
+                        location.href = "/loginPage.jsp";
+                    }
                 }
             }
         } else if (action === "edit") {
@@ -276,8 +283,15 @@
                     //发请求到Servlet，并且传参游戏的id
                     location.href = "game?action=editPage&id=" + id;
                 }
-                else {
-                    alert("你不是管理员，没有进行修改操作的权限");
+                else if(resultInfo.ok){
+                    alert("你不是管理员，没有进行删除操作的权限");
+                }
+                else{
+                    var wantLogin = confirm("你还没有登录，是否登录？（此操作仅限管理员账号进行）");
+                    if(wantLogin){
+                        //发请求到Servlet，并且传参游戏的id
+                        location.href = "/loginPage.jsp";
+                    }
                 }
             }
         } else if (action === "add") {
@@ -288,7 +302,11 @@
                     location.href = "addGamePage.jsp";
                 }
                 else {
-                    alert("你还没有登录，不能添加游戏");
+                    var wantLogin = confirm("你还没有登录，是否登录？（此操作仅限已登录账号进行）");
+                    if(wantLogin){
+                        //发请求到Servlet，并且传参游戏的id
+                        location.href = "/loginPage.jsp";
+                    }
                 }
             }
         }
