@@ -28,83 +28,108 @@
     <br/>
     <br/>
     <h3 style="text-align: center">扫雷游戏</h3>
-    <button class="btn btn-primary" onclick="gaming()">
-        重新开启一局游戏
-    </button>
-    <div id="minemap"> </div>
+    <div>
+        <button class="btn btn-primary" onclick="gaming()">
+            开启一局新游戏
+        </button>
+        <span id="gameTime"><strong>游戏时间：</strong>00:00.00</span>
+        <span id="restUndig"><strong>剩余未挖掘的安全区域个数：</strong>71</span>
+    </div>
+    <div id="minemap"></div>
 </div>
 </body>
 
 <script>
     var mineMap = new Array(11);
-    for(var i=0;i<11;i++){
-        mineMap[i]= new Array(11);
+    for (var i = 0; i < 11; i++) {
+        mineMap[i] = new Array(11);
     }
 
     var mineMapMask = new Array(11);
-    for(i=0;i<11;i++){ //js的作用域只有函数采用，所以这里i不需要var
-        mineMapMask[i]= new Array(11);
+    for (i = 0; i < 11; i++) { //js的作用域只有函数采用，所以这里i不需要var
+        mineMapMask[i] = new Array(11);
     }
 
-    var offset = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+    var offset = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
     var mineNum = 10;
     var remainingUndig = 81;
     var endGameFlag = false;
+    var startTime;
+    var endTime;
+    var gameTimer;
 
-    gaming();
-
-    function gaming(){
+    function gaming() {
         renderMap();
-        endGameFlag=false;
+        endGameFlag = false;
         reMineMap();
         initMineMap();
         reMineMapMask();
         setBoundary();
         remainingUndig = 81;
+        startTime = new Date();
+        gameTimer = setInterval(updateGameTimeDisplay, 37);
+        updateRestUndig();
     }
 
-    function renderMap(){
+    function updateGameTimeDisplay(){
+        var gameTimeMillis = parseInt(new Date().getTime() - startTime.getTime());
+
+        var millis = gameTimeMillis%1000;
+        if(millis<10) var millis0 = "00";
+        else if(millis<100) millis0 = "0";
+        else millis0 = "";
+
+        var sec = parseInt(gameTimeMillis/1000)%60;
+        if(sec<10) var sec0 = "0";
+        else sec0 = "";
+
+        var min = parseInt(gameTimeMillis/60000);
+
+        $("#gameTime").html("<strong>游戏时间：</strong>"+min+":"+sec0+sec+"."+millis0+millis);
+    }
+
+    function renderMap() {
         var htmlstr = "<table border=\"1\" class=\"table table-bordered\" style=\"table-layout:fixed;font-size: large;font-weight: bold;align-content: center\" cellpadding=\"0\" cellspacing=\"0\">";
-        for(var i=1;i<=9;i++){
-            htmlstr+="<tr id=\"tr"+i+"\">";
-            for(var j=1;j<=9;j++){
-                htmlstr+="<td id=\""+i+"_"+j+"\" align=\"center\"><button class=\"btn btn-block\" onclick=\"userMineMapMaskAfterDig("+i+","+j+")\">&nbsp;</button></td>";
+        for (var i = 1; i <= 9; i++) {
+            htmlstr += "<tr id=\"tr" + i + "\">";
+            for (var j = 1; j <= 9; j++) {
+                htmlstr += "<td id=\"" + i + "_" + j + "\" align=\"center\"><button class=\"btn btn-block\" onclick=\"userMineMapMaskAfterDig(" + i + "," + j + ")\">&nbsp;</button></td>";
             }
-            htmlstr+="</tr>";
+            htmlstr += "</tr>";
         }
-        htmlstr+="</table>";
+        htmlstr += "</table>";
         $("#minemap").html(htmlstr);
     }
 
-    function initMineMap(){
+    function initMineMap() {
         mineGenerator();
         numGenerator();
     }
 
-    function reMineMap(){
-        for(var i=0;i<11;i++){
-            for(var j=0;j<11;j++){
-                mineMap[i][j]=0;
+    function reMineMap() {
+        for (var i = 0; i < 11; i++) {
+            for (var j = 0; j < 11; j++) {
+                mineMap[i][j] = 0;
             }
         }
     }
 
-    function reMineMapMask(){
-        for(var i=0;i<11;i++){
-            for(var j=0;j<11;j++){
-                mineMapMask[i][j]=false;
+    function reMineMapMask() {
+        for (var i = 0; i < 11; i++) {
+            for (var j = 0; j < 11; j++) {
+                mineMapMask[i][j] = false;
             }
         }
     }
 
-    function mineGenerator(){
+    function mineGenerator() {
         var finishMineGeneratorFlag = true;
         var mineCount = 0;
         var row;
         var col;
         while (finishMineGeneratorFlag) {
-            row = Math.floor(Math.random()*9) + 1;
-            col = Math.floor(Math.random()*9) + 1;
+            row = Math.floor(Math.random() * 9) + 1;
+            col = Math.floor(Math.random() * 9) + 1;
             if (mineMap[row][col] !== 9) {
                 mineMap[row][col] = 9;
                 mineCount++;
@@ -115,13 +140,13 @@
         }
     }
 
-    function numGenerator(){
-        for(var i=1;i<10;i++){
-            for(var j=1;j<10;j++){
-                if(mineMap[i][j]!==9){
+    function numGenerator() {
+        for (var i = 1; i < 10; i++) {
+            for (var j = 1; j < 10; j++) {
+                if (mineMap[i][j] !== 9) {
                     var countBomb = 0;
-                    for(var k=0;k<8; k++){
-                        if(mineMap[i+offset[k][0]][j+offset[k][1]]===9){
+                    for (var k = 0; k < 8; k++) {
+                        if (mineMap[i + offset[k][0]][j + offset[k][1]] === 9) {
                             countBomb++;
                         }
                     }
@@ -131,34 +156,65 @@
         }
     }
 
-    function setBoundary(){
-        for(var i=0;i<11;i++){
+    function setBoundary() {
+        for (var i = 0; i < 11; i++) {
             mineMapMask[i][0] = mineMapMask[i][10] = true;
         }
-        for(var j=1;j<10;j++){
+        for (var j = 1; j < 10; j++) {
             mineMapMask[0][j] = mineMapMask[10][j] = true;
         }
     }
 
-    function userMineMapMaskAfterDig(aRow,aCol){
+    function countGameTime(){
+        var gameTimeMillis = parseInt(endTime.getTime() - startTime.getTime());
+
+        var millis = gameTimeMillis%1000;
+        if(millis<10) var millis0 = "00";
+        else if(millis<100) millis0 = "0";
+        else millis0 = "";
+
+        var sec = parseInt(gameTimeMillis/1000)%60;
+        if(sec<10) var sec0 = "0";
+        else sec0 = "";
+
+        var min = parseInt(gameTimeMillis/60000);
+        return ""+min+":"+sec0+sec+"."+millis0+millis
+    }
+
+    function userMineMapMaskAfterDig(aRow, aCol) {
         if (mineMap[aRow][aCol] === 9) {
             endGameFlag = true;
-            $("#minemap button").attr("disabled",true);
+            $("#minemap button").attr("disabled", true);
             dig(aRow, aCol);
-            displayMineMapAfterLose(aRow,aCol);
-            alert("你输了，你点击的[" + aRow + "，" + aCol + "]位置是地雷");
+            displayMineMapAfterLose(aRow, aCol);
+            endTime = new Date();
+            clearInterval(gameTimer);
+
+            updateRestUndig();
+
+            alert("你输了，你点击的[" + aRow + "，" + aCol + "]位置是地雷\n\n游戏时间："+countGameTime()+"\n剩余未挖掘的安全区域个数："+(remainingUndig-mineNum));
         } else {
             dig(aRow, aCol);
             displayMineMap();
-            if(remainingUndig === mineNum){
-                alert("你赢了！");
-                endGameFlag=true;
-                $("#minemap button").attr("disabled",true);
+
+            updateRestUndig();
+
+            if (remainingUndig === mineNum) {
+                endGameFlag = true;
+                $("#minemap button").attr("disabled", true);
+                endTime = new Date();
+                clearInterval(gameTimer);
+
+                alert("你赢了！\n\n游戏时间："+countGameTime());
             }
         }
     }
 
-    function dig(aRow,aCol){
+    function updateRestUndig(){
+        $("#restUndig").html("<strong>剩余未挖掘的安全区域个数：</strong>"+(remainingUndig-mineNum));
+    }
+
+    function dig(aRow, aCol) {
         mineMapMask[aRow][aCol] = true;
         if (mineMap[aRow][aCol] !== 9) remainingUndig--;
         if (mineMap[aRow][aCol] === 0) {
@@ -169,23 +225,41 @@
         }
     }
 
-    function displayMineMap(){
+    function displayMineMap() {
         for (var i = 1; i <= 9; i++) {
             for (var j = 1; j <= 9; j++) {
                 if (mineMapMask[i][j]) {
-                    if(mineMap[i][j]<=0) $("#"+i+"_"+j).html("<span>&nbsp;</span>");
-                    else if(mineMap[i][j]>=9) $("#"+i+"_"+j).html("<span class=\"glyphicon glyphicon-asterisk\" aria-hidden=\"true\"></span>");
+                    if (mineMap[i][j] <= 0) $("#" + i + "_" + j).html("<span>&nbsp;</span>");
+                    else if (mineMap[i][j] >= 9) {
+                        $("#" + i + "_" + j).html("<span class=\"glyphicon glyphicon-asterisk\" aria-hidden=\"true\"></span>");
+                    }
                     else {
-                        $("#"+i+"_"+j).text(mineMap[i][j]);
-                        switch(mineMap[i][j]) {
-                            case 1:$("#"+i+"_"+j).attr("style","font-size: large;font-weight: bold;color:blue");break;
-                            case 2:$("#"+i+"_"+j).attr("style","font-size: large;font-weight: bold;color:green");break;
-                            case 3:$("#"+i+"_"+j).attr("style","font-size: large;font-weight: bold;color:red");break;
-                            case 4:$("#"+i+"_"+j).attr("style","font-size: large;font-weight: bold;color:purple");break;
-                            case 5:$("#"+i+"_"+j).attr("style","font-size: large;font-weight: bold;color:brown");break;
-                            case 6:$("#"+i+"_"+j).attr("style","font-size: large;font-weight: bold;color:cyan");break;
-                            case 7:$("#"+i+"_"+j).attr("style","font-size: large;font-weight: bold;color:black");break;
-                            case 8:$("#"+i+"_"+j).attr("style","font-size: large;font-weight: bold;color:grey");break;
+                        $("#" + i + "_" + j).text(mineMap[i][j]);
+                        switch (mineMap[i][j]) {
+                            case 1:
+                                $("#" + i + "_" + j).attr("style", "font-size: large;font-weight: bold;color:blue");
+                                break;
+                            case 2:
+                                $("#" + i + "_" + j).attr("style", "font-size: large;font-weight: bold;color:green");
+                                break;
+                            case 3:
+                                $("#" + i + "_" + j).attr("style", "font-size: large;font-weight: bold;color:red");
+                                break;
+                            case 4:
+                                $("#" + i + "_" + j).attr("style", "font-size: large;font-weight: bold;color:purple");
+                                break;
+                            case 5:
+                                $("#" + i + "_" + j).attr("style", "font-size: large;font-weight: bold;color:brown");
+                                break;
+                            case 6:
+                                $("#" + i + "_" + j).attr("style", "font-size: large;font-weight: bold;color:cyan");
+                                break;
+                            case 7:
+                                $("#" + i + "_" + j).attr("style", "font-size: large;font-weight: bold;color:black");
+                                break;
+                            case 8:
+                                $("#" + i + "_" + j).attr("style", "font-size: large;font-weight: bold;color:grey");
+                                break;
                         }
                     }
                 }
@@ -193,14 +267,13 @@
         }
     }
 
-    function displayMineMapAfterLose(aRow,aCol){
+    function displayMineMapAfterLose(aRow, aCol) {
         for (var i = 1; i <= 9; i++) {
             for (var j = 1; j <= 9; j++) {
-                if(mineMap[i][j]===9) {
-                    if(i!==aRow||j!==aCol) $("#"+i+"_"+j).html("<span class=\"glyphicon glyphicon-asterisk\" aria-hidden=\"true\"></span>");
+                if (mineMap[i][j] === 9) {
+                    if (i !== aRow || j !== aCol) $("#" + i + "_" + j).html("<span class=\"glyphicon glyphicon-asterisk\" aria-hidden=\"true\"></span>").attr("bgcolor","grey");
                     else {
-                        $("#"+i+"_"+j).attr("style","font-size: large;font-weight: bold;color:orange");
-                        $("#"+i+"_"+j).html("<span class=\"glyphicon glyphicon-fire\" aria-hidden=\"true\"></span>");
+                        $("#" + i + "_" + j).html("<span class=\"glyphicon glyphicon-fire\" aria-hidden=\"true\"></span>").attr({"style":"font-size: large;font-weight: bold;color:orange;background-color:red"});
                     }
                 }
             }
