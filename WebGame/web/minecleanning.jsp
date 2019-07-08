@@ -69,6 +69,24 @@
         startTime = new Date();
         gameTimer = setInterval(updateGameTimeDisplay, 37);
         updateRestUndig();
+        uploadNewGame();
+    }
+
+    function uploadNewGame(){
+        $.post(
+            "minecleanning",
+            {action:"newGame",startTime:formatDate(startTime)}
+        );
+    }
+
+    function formatDate(date) {
+        var YY = date.getFullYear() + '-';
+        var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate());
+        var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+        var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+        return YY + MM + DD +" "+hh + mm + ss;
     }
 
     function updateGameTimeDisplay(){
@@ -191,6 +209,7 @@
             clearInterval(gameTimer);
 
             updateRestUndig();
+            uploadEndGame();
 
             alert("你输了，你点击的[" + aRow + "，" + aCol + "]位置是地雷\n\n游戏时间："+countGameTime()+"\n剩余未挖掘的安全区域个数："+(remainingUndig-mineNum));
         } else {
@@ -198,6 +217,7 @@
             displayMineMap();
 
             updateRestUndig();
+            uploadGame();
 
             if (remainingUndig === mineNum) {
                 endGameFlag = true;
@@ -205,9 +225,25 @@
                 endTime = new Date();
                 clearInterval(gameTimer);
 
+                uploadEndGame();
+
                 alert("你赢了！\n\n游戏时间："+countGameTime());
             }
         }
+    }
+
+    function uploadGame(){
+        $.post(
+            "minecleanning",
+            {action:"updateUnfinishedGame",restUndig:remainingUndig-mineNum}
+        );
+    }
+
+    function uploadEndGame(){
+        $.post(
+            "minecleanning",
+            {action:"endGame",gameTimeMillis:parseInt(endTime.getTime() - startTime.getTime()),restUndig:remainingUndig-mineNum}
+        );
     }
 
     function updateRestUndig(){

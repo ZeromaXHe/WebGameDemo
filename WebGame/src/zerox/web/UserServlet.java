@@ -98,7 +98,7 @@ public class UserServlet extends BaseServlet {
         }
 
         //2.2 再校验用户名,通过service进行注册
-        User user = new User(username,password);
+        User user = new User(1,username,password);
         boolean b = false;
         try {
             b = service.register(user);

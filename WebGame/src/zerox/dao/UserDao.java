@@ -7,17 +7,17 @@ import zerox.bean.User;
 import zerox.utils.C3P0Utils;
 
 public class UserDao {
+    private JdbcTemplate jdbcTemplate = new JdbcTemplate(C3P0Utils.getDataSource());
+
     public int save(User user) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(C3P0Utils.getDataSource());
         return jdbcTemplate.update("insert into user(username,password) values(?,?)",user.getUsername(),user.getPassword());
     }
 
     public int contains(User user) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(C3P0Utils.getDataSource());
         return jdbcTemplate.queryForList("select * FROM user where username=?",user.getUsername()).size();
     }
+
     public User login(String username, String password) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(C3P0Utils.getDataSource());
         User user = null;
         try {
             user = jdbcTemplate.queryForObject("select * from user where username = ? and password = ?", new BeanPropertyRowMapper<>(User.class), username, password);
