@@ -64,7 +64,7 @@
                     "<li class=\"dropdown\">\n" +
                     "<a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">" + resultInfo.data.username + "，欢迎您~ 您已登录<span class=\"caret\"></span></a>\n" +
                     "<ul class=\"dropdown-menu\">\n" +
-                    "<li><a href=\"#\">个人资料</a></li>\n" +
+                    "<li><a href=\"user?action=personalPage&userid="+resultInfo.data.userid+"\">个人资料</a></li>\n" +
                     "<li><a href=\"#\">修改密码</a></li>\n" +
                     "<li role=\"separator\" class=\"divider\"></li>\n" +
                     "<li><a href=\"#\">关于</a></li>\n" +

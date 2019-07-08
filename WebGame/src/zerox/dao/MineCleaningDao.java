@@ -5,9 +5,12 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import zerox.bean.MCGameRecord;
 import zerox.bean.MCUserRecord;
+import zerox.bean.MineCleaningHero;
 import zerox.utils.C3P0Utils;
 
-public class MineCleannningDao {
+import java.util.List;
+
+public class MineCleaningDao {
     private JdbcTemplate jdbcTemplate = new JdbcTemplate(C3P0Utils.getDataSource());
 
     public int newGameRecord(MCGameRecord mcGameRecord){
@@ -52,5 +55,19 @@ public class MineCleannningDao {
     public int updateGameRecord(MCGameRecord mcGameRecord) {
         Object[] params = {mcGameRecord.getStatus(),mcGameRecord.getGameTimeMillis(),mcGameRecord.getRestUndig(),mcGameRecord.getStartTime(),mcGameRecord.getMcgameid()};
         return jdbcTemplate.update("update mc_game_record set status = ? , gameTimeMillis = ? , restUndig = ? , startTime = ? WHERE mcgameid = ?", params);
+    }
+
+    public List<MineCleaningHero> queryAllPlayer(String sortBy) {
+        String sqlOrderBy = "SELECT u.`userid` AS userid,username,playedGame,winGame,loseGame,unfinishedGame,winRate,fastWinMillis FROM USER AS u ,mc_user_record AS r WHERE u.`userid` = r.`userid`";
+        if("mostPlay".equals(sortBy)){
+            sqlOrderBy += " ORDER BY playedGame DESC";
+        }else if("mostWin".equals(sortBy)){
+            sqlOrderBy += " ORDER BY winGame DESC";
+        }else if("highestWinRate".equals(sortBy)){
+            sqlOrderBy += " ORDER BY winRate DESC";
+        }else if("fastTime".equals(sortBy)){
+            sqlOrderBy += " ORDER BY fastWinMillis";
+        }
+        return jdbcTemplate.query(sqlOrderBy, new BeanPropertyRowMapper<>(MineCleaningHero.class));
     }
 }

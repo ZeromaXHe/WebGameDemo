@@ -116,4 +116,12 @@ public class UserServlet extends BaseServlet {
             request.getRequestDispatcher("/registerPage.jsp").forward(request, response);
         }
     }
+
+    public void personalPage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        int userid = Integer.parseInt(request.getParameter("userid"));
+        request.setAttribute("userid",userid);
+        request.setAttribute("username",service.findUserById(userid).getUsername());
+
+        request.getRequestDispatcher("/personalPage.jsp").forward(request, response);
+    }
 }

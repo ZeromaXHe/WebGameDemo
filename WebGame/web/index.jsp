@@ -55,6 +55,7 @@
         <br/>
         <div>
             <a role="button" class="btn btn-primary" href="#" onclick="confirmLogin()">扫雷</a>
+            <a role="button" class="btn btn-info" href="minecleanningHero.jsp" >扫雷英雄榜</a>
         </div>
     </div>
 </div>

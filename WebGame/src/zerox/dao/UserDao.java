@@ -27,4 +27,15 @@ public class UserDao {
         }
         return user;
     }
+
+    public User findUserById(int userid) {
+        User user = null;
+        try {
+            user = jdbcTemplate.queryForObject("select * from user where userid = ?", new BeanPropertyRowMapper<>(User.class), userid);
+        } catch (EmptyResultDataAccessException e) {
+            System.out.println("找不到用户User[userid="+userid+"]");
+            e.printStackTrace();
+        }
+        return user;
+    }
 }
